@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "506064207108",
+    "project_id": "sofiqe-59e70",
+    "storage_bucket": "sofiqe-59e70.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:506064207108:android:1efac3dbceb773fa9da451",
+        "android_client_info": {
+          "package_name": "com.sofiqe.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "506064207108-ap7efplpbvck12jadglftdsdd9f1p56d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sofiqe.app",
+            "certificate_hash": "cf29dfa834db5f5e18c5d45dbc7cf8985fcb4a38"
+          }
+        },
+        {
+          "client_id": "506064207108-t7u11dfjrm35em19jmqk8g2qu36rdggm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sofiqe.app",
+            "certificate_hash": "050287398ec3ad19a92b22c6d9ada2d758f6c65e"
+          }
+        },
+        {
+          "client_id": "506064207108-u8628kcaucccm08un0cur45sgmpsgg6q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAL7j742q6OiBzjHW8SVbqts3ao1jk-CF4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "506064207108-u8628kcaucccm08un0cur45sgmpsgg6q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

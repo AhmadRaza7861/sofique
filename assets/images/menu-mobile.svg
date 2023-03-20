@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="14.171" height="26.818" viewBox="0 0 14.171 26.818">
+  <g id="Group_234" data-name="Group 234" transform="translate(-28.329 -331.693)">
+    <g id="Group_220" data-name="Group 220" transform="translate(35.376 349.668) rotate(-30)">
+      <g id="Ellipse_9" data-name="Ellipse 9" transform="translate(0 0)" fill="#eb7ac1" stroke="red" stroke-width="1">
+        <ellipse cx="1.116" cy="2.789" rx="1.116" ry="2.789" stroke="none"/>
+        <ellipse cx="1.116" cy="2.789" rx="0.616" ry="2.289" fill="none"/>
+      </g>
+      <g id="Rectangle_387" data-name="Rectangle 387" transform="translate(0 2.231)" fill="#eb7ac1" stroke="#030303" stroke-width="1">
+        <rect width="2.231" height="4.463" stroke="none"/>
+        <rect x="0.5" y="0.5" width="1.231" height="3.463" fill="none"/>
+      </g>
+    </g>
+    <path id="mobile-1" d="M107.854,0H97.317A1.488,1.488,0,0,0,96,1.614V24.2a1.487,1.487,0,0,0,1.317,1.614h10.537a1.487,1.487,0,0,0,1.317-1.614V1.614A1.488,1.488,0,0,0,107.854,0Zm-7.573,1.614h4.61a.371.371,0,0,1,.329.4.371.371,0,0,1-.329.4h-4.61a.371.371,0,0,1-.329-.4A.371.371,0,0,1,100.281,1.614Zm2.3,23.4a1.235,1.235,0,1,1,.988-1.21A1.116,1.116,0,0,1,102.586,25.011Zm5.268-3.227H97.317V4.034h10.537Z" transform="translate(-67.171 332.193)" fill="#eb7ac1" stroke="#eb7ac1" stroke-width="1" fill-rule="evenodd"/>
+  </g>
+</svg>

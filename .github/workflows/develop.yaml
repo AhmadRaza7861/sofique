@@ -1,0 +1,169 @@
+# Dart version 2.16.1/2.18.0
+# Flutter version 2.10.3/3.3.0
+
+name: Develop And Features Workflow
+
+on:
+  push:
+    branches:
+    # Below regex pattern needs to be adjusted to what is used in Ticketing system
+      - feature/**
+  pull_request:
+    types:
+      - opened
+    branches:
+      - develop
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'Release new version'
+        required: true
+        type: boolean
+      changelog:
+        description: "Changelog message"
+        required: true
+        type: string
+
+jobs:
+  runFlutter:
+    if: ${{ ! github.event.inputs.release }}
+    strategy:
+      matrix:
+        #flutterVersion: [2.10.3, 3.3.0]
+        flutterVersion: [3.3.0]
+        #dartVersion: [2.16.1, 2.18.0]
+        dartVersion: [2.17.0]
+        gradleVersion: [6.7]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+          token: ${{ secrets.CICD_GITHUB_TOKEN }}
+      
+      # - name: Checkout flutter/tests GitHub repo
+      #   uses: actions/checkout@v3
+      #   with:
+      #     repository: 'flutter/tests'
+      #     path: flutter-tests
+      #      token: ${{ secrets.CICD_GITHUB_TOKEN }}
+      
+      # - name: Check Flutter-tests
+      #   run: |
+      #     ls -l flutter-tests/*
+      
+      # - name: Checkout fzyzcjy/flutter_convenient_test GitHub repo
+      #   uses: actions/checkout@v3
+      #   with:
+      #     repository: 'fzyzcjy/flutter_convenient_test'
+      #     path: flutter-convenient-test
+      #      token: ${{ secrets.CICD_GITHUB_TOKEN }}
+      
+      # - name: Check Flutter convenient-test
+      #   run: |
+      #     ls -l flutter-convenient-test/*
+      
+      - name: Install Ubuntu deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install jq
+          sudo pip install yq
+      
+      - name: Setup additional params
+        run: |
+          echo "BUILD_TIME=$(date +%d-%m-%Y_%H-%M-%S)" >> $GITHUB_ENV
+          echo "LAST_COMITTER=$(git log -1 --pretty=format:'%an' | awk -F' ' '{print $1}')" >> $GITHUB_ENV
+      - uses: dart-lang/setup-dart@v1.3
+        with:
+          sdk: ${{ matrix.dartVersion }}
+
+      - name: Setup Flutter - ${{ matrix.flutterVersion }}
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ matrix.flutterVersion }}
+      
+      - name: Setup Gradle ${{ matrix.gradleVersion }}
+        uses: gradle/gradle-build-action@v2
+        with:
+          gradle-version: ${{ matrix.gradleVersion }}
+      
+      - name: Run Flutter Linter
+        if: ${{ always() }}
+        run: flutter analyze
+      
+      # - name: Run Flutter tests
+      #   run: |
+      #     cd flutter-tests
+      #     flutter pub get
+      #     flutter test registry/*.test
+      
+      # #- name: Run Flutter convenient-test
+      # #  run: |
+      # #    cd flutter-convenient-test/packages
+      # #    WORK_DIR=$(pwd)
+      # #    export dir_list=( $(ls -d */ | tr -d '/') )
+      # #    for directory in "${dir_list[@]}"; do
+      # #      cd "${WORK_DIR}/${directory}"
+      # #      flutter pub get
+      # #      cd test
+      # #      flutter test *
+      # #      cd "${WORK_DIR}"
+      # #    done
+      # #    cd ${{ github.workspace }}
+      
+      # - name: Install Flutter dependencies - ${{ matrix.flutterVersion }}
+      #   if: ${{ always() }}
+      #   run: |
+      #     flutter packages get
+      #     flutter pub get
+      # - name: Build APK
+      #   if: ${{ always() }}
+      #   run: |
+      #     flutter build apk
+      
+      # - name: Setup APK name
+      #   run: |
+      #     cp build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/sofiqe-flutter-RC-${{ env.LAST_COMITTER }}-${{ env.BUILD_TIME }}.apk
+      # - name: Upload APK artifact
+      #   if: ${{ always() }}
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: sofiqe-flutter-RC-${{ env.LAST_COMITTER }}-${{ env.BUILD_TIME }}
+      #     path: build/app/outputs/flutter-apk/sofiqe-flutter-RC-${{ env.LAST_COMITTER }}-${{ env.BUILD_TIME }}.apk
+
+#       - name: Build IPA
+#         if: ${{ always() }}
+#         run: |
+#           flutter build ipa
+
+      # - name: Upload IPA artifact
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: sofiqe-ipa
+      #     path: bbuild/ios/ipa/*.ipa
+      
+      - name: Setup summary
+        id: setup-summary
+        shell: bash
+        run: |
+          DATE_NOW=$(date +%d-%m-%Y)
+          TIME_NOW=$(date +%H:%M)
+          echo "Build date: ${DATE_NOW}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+          echo "Build time: ${TIME_NOW}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+          echo "Main Builder: $GITHUB_ACTOR" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+          echo "" >> $GITHUB_STEP_SUMMARY # this is a blank line
+      
+      - name: Merge code to release branch
+        if: ${{ github.event.inputs.release == 'true' }}
+        shell: bash
+        run: |
+          .github/scripts/validate_integrity_release.sh
+  callRelease:
+    uses: Conqorde/sofiqeflutter/.github/workflows/release.yaml@release
+    with:
+      message: ${{ github.event.inputs.changelog }}
+    secrets: inherit
+    if: ${{ github.event.inputs.release == 'true' }}
